@@ -1,0 +1,22 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html data-theme="dracula">
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock %}</title>
+    {% tailwind_css %}
+    </head>
+
+    <body class="font-serif leading-normal tracking-normal">
+        {% block nav %}
+		{% endblock %}
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
+    </body>
+
+    {% block script %}
+    {% endblock %}
+</html>
