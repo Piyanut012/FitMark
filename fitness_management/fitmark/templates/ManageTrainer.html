@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Booking{% endblock %}
+{% block nav %}{% include "navbar.html" %}{% endblock %}
+{% block content %}
+
+<section class="max-w-5xl mx-auto p-6">
+    <div class="flex justify-between items-center">
+        <h2 class="text-4xl font-bold text-accent mb-4">จัดการเทรนเนอร์</h2>
+        <button class="bg-primary text-2xl text-white font-bold py-2 px-20 rounded-3xl hover:bg-pink-500">เพิ่มคลาส</button>
+    </div>
+
+
+    <!-- Trainers Cards -->
+    <div class=" p-4 flex justify-between items-center border-b-2 border-secondary">
+        <div class="flex items-center space-x-7">
+            <img src="{% static 'images/trainer.jpg' %}" alt="trainer" class="w-28 h-28 rounded-full object-cover">
+            <div>
+                <h3 class="text-secondary text-3xl font-semibold">รุ่ง เรือง</h3>
+            </div>
+        </div>
+        <div class="flex items-center text-lg space-x-12 mr-10">
+            <a href="#" class="text-yellow-600 hover:text-yellow-400">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
+            </a>    
+            <a href="#" class="text-red-400 hover:text-red-600">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>    
+            </a>
+        </div>
+    </div>
+
+    <!-- Repeat for multiple trianer -->
+    <div class=" p-4 flex justify-between items-center border-b-2 border-secondary">
+        <div class="flex items-center space-x-7">
+            <img src="{% static 'images/trainer.jpg' %}" alt="trainer" class="w-28 h-28 rounded-full object-cover">
+            <div>
+                <h3 class="text-secondary text-3xl font-semibold">รุ่ง เรือง</h3>
+            </div>
+        </div>
+        <div class="flex items-center text-lg space-x-12 mr-10">
+            <a href="#" class="text-yellow-600 hover:text-yellow-400">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
+            </a>    
+            <a href="#" class="text-red-400 hover:text-red-600">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>    
+            </a>
+        </div>
+    </div>
+    <div class=" p-4 flex justify-between items-center border-b-2 border-secondary">
+        <div class="flex items-center space-x-7">
+            <img src="{% static 'images/trainer.jpg' %}" alt="trainer" class="w-28 h-28 rounded-full object-cover">
+            <div>
+                <h3 class="text-secondary text-3xl font-semibold">รุ่ง เรือง</h3>
+            </div>
+        </div>
+        <div class="flex items-center text-lg space-x-12 mr-10">
+            <a href="#" class="text-yellow-600 hover:text-yellow-400">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
+            </a>    
+            <a href="#" class="text-red-400 hover:text-red-600">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>    
+            </a>
+        </div>
+    </div>
+    <div class=" p-4 flex justify-between items-center border-b-2 border-secondary">
+        <div class="flex items-center space-x-7">
+            <img src="{% static 'images/trainer.jpg' %}" alt="trainer" class="w-28 h-28 rounded-full object-cover">
+            <div>
+                <h3 class="text-secondary text-3xl font-semibold">รุ่ง เรือง</h3>
+            </div>
+        </div>
+        <div class="flex items-center text-lg space-x-12 mr-10">
+            <a href="#" class="text-yellow-600 hover:text-yellow-400">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
+            </a>    
+            <a href="#" class="text-red-400 hover:text-red-600">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>    
+            </a>
+        </div>
+    </div>
+        
+        
+</section>
+{% endblock %}
