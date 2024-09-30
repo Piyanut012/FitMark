@@ -1,14 +1,28 @@
 {% load static tailwind_tags %}
+{% load static %}
 <!DOCTYPE html>
 <html data-theme="dracula">
     <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}{% endblock %}</title>
-    {% tailwind_css %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}{% endblock %}</title>
+        {% tailwind_css %}
+        <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css"  rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Allerta+Stencil&display=swap" rel="stylesheet">
+
+        {% comment %} front for logo {% endcomment %}
+        <style>
+            .allerta-stencil-regular {
+                font-family: "Allerta Stencil", sans-serif;
+                font-weight: 400;
+                font-style: normal;
+              }
+        </style>
     </head>
 
-    <body class="font-serif leading-normal tracking-normal">
+    <body class="bg-gray-800 font-sans min-h-screen flex-col">
         {% block nav %}
 		{% endblock %}
         <main>
@@ -18,5 +32,6 @@
     </body>
 
     {% block script %}
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
     {% endblock %}
 </html>
