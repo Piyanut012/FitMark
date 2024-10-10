@@ -19,3 +19,7 @@ class ClassForm(ModelForm):
         model = Class
         fields = ['name', 'detail', 'price', 'image']
 
+class ScheduleForm(ModelForm):
+    class Meta:
+        model = Schedule
+        fields = ['date', 'start_time', 'end_time', 'capacity', 'booked_seats']

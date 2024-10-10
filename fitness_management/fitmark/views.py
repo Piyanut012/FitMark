@@ -1,11 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from .forms import *
 from django.views import View
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 class FirstPageView(View):
 
@@ -73,37 +74,66 @@ class BookingView(LoginRequiredMixin, View):
         # form = BookingForm()
         return render(request, 'booking.html', context)
 
-
 class ManageClasses(LoginRequiredMixin, View):
     login_url = '/login/'
 
     def get(self, request):
         trainer = request.user.trainer
         classes = Class.objects.filter(trainer=trainer)
-        form = ClassForm()
         context = {
             "user": trainer,
-            "classes": classes,
-            "form": form
+            "classes": classes
         }
         return render(request, 'ManageClasses.html', context)
     
     def post(self, request):
-        form = ClassForm(request.POST, request.FILES)
-        if form.is_valid():
-            class_instance = form.save(commit=False)
-            class_instance.trainer = request.user.trainer
-            class_instance.save()
-            return redirect('manage_classes')
-        else:
-            print(form.errors)
+
+        if request.POST.get('_method') == 'POST':
+            form = ClassForm(request.POST)
+            if form.is_valid():
+                class_instance = form.save(commit=False)
+                class_instance.trainer = request.user.trainer
+                class_instance.save()
+                return redirect('manage_classes')
+            else:
+                print(form.errors)
+            
+            return render(request, 'ManageClasses.html', {'form': form})
         
-        return render(request, 'ManageClasses.html', {'form': form})
+        elif request.POST.get('_method') == 'PUT':
+            class_id = request.POST.get('class_id')
+            print(class_id)
+            class_instance = get_object_or_404(Class, id=class_id)
+            form = ClassForm(request.POST, instance=class_instance)
+
+            if form.is_valid():
+                form.save()
+                return redirect('manage_classes')
+            
+            return render(request, 'ManageClasses.html', {'form': form})
+        
+        elif request.POST.get('_method') == 'DELETE':
+            class_id = request.POST.get('class_id')
+            class_instance = get_object_or_404(Class, id=class_id)
+            class_instance.delete()
+            return redirect('manage_classes')
+
+class ClassesScheduleView(LoginRequiredMixin, View):
+    login_url = '/login/'
+
+    def get(self, request):
+        trainer = request.user.trainer
+        classes = Class.objects.filter(trainer=trainer)
+        context = {
+            "user": trainer,
+            "classes": classes
+        }
+
+        return render(request, 'ClassesSchedule.html', context)
+     
 
 
-# def index(request):
-#     context = {}
-#     return render(request, 'booking.html', context)
+
 
 
 

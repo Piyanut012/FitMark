@@ -12,6 +12,7 @@ urlpatterns = [
 
     # Trainer pages
     path("ManageClasses/", views.ManageClasses.as_view(), name="manage_classes"),
+    path("ScheduleClasses/", views.ClassesScheduleView.as_view(), name="classes_schedule"),
 
     # path("index/", views.index, name="index"),
 ]

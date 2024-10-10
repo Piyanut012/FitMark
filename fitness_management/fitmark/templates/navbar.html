@@ -9,7 +9,7 @@
             <a href="#" class=" py-4 px-4 hover:text-accent">สมาชิก</a>
             {% elif request.user.trainer %}
             <a href="{% url 'manage_classes' %}" class=" py-4 px-4 hover:text-accent">จัดการคลาส</a>
-            <a href="#" class=" py-4 px-4 hover:text-accent">ตารางคลาส</a>
+            <a href="{% url 'classes_schedule' %}" class=" py-4 px-4 hover:text-accent">ตารางคลาส</a>
             {% endif %}
         </div>
         <div class="flex items-center space-x-6">

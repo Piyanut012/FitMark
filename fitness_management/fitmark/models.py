@@ -43,7 +43,7 @@ class Class(models.Model):
     name = models.CharField(max_length=50)
     detail = models.TextField(null=True, blank=True)
     price = models.DecimalField(default=0, max_digits=5, decimal_places=2)
-    image = models.ImageField(upload_to='class_images/', null=True, blank=True)
+    image = models.URLField(max_length=200, null=True, blank=True)
     trainer = models.ForeignKey(
         Trainer, 
         on_delete=models.CASCADE, 
