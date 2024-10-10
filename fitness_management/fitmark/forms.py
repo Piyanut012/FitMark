@@ -1,3 +1,4 @@
+import datetime
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.forms import ModelForm
@@ -22,4 +23,22 @@ class ClassForm(ModelForm):
 class ScheduleForm(ModelForm):
     class Meta:
         model = Schedule
-        fields = ['date', 'start_time', 'end_time', 'capacity', 'booked_seats']
+        fields = ['date', 'start_time', 'end_time', 'capacity']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        start_time = cleaned_data.get('start_time')
+        end_time = cleaned_data.get('end_time')
+
+        if start_time >= end_time:
+            raise forms.ValidationError("เวลาจบต้องอยู่หลังเวลาเริ่ม")
+
+        return cleaned_data
+    
+    def clean_date(self):
+        date = self.cleaned_data.get('date')
+
+        if date < datetime.date.today():
+            raise forms.ValidationError("ไม่สามารถเลือกวันที่ย้อนหลังได้")
+        
+        return date

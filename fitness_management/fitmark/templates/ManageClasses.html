@@ -122,7 +122,7 @@
             <form id="edit_class_form" action="{% url 'manage_classes' %}" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="hidden" id="edit_class_id" name="class_id" value=""/>
-                <input type="hidden" name="_method" value="PUT"/>  <!-- Specify that this is a PUT request -->
+                <input type="hidden" name="_method" value="PUT"/>
 
                 <h2 class="text-center text-5xl font-semibold text-primary mb-12">แก้ไขคลาส</h2>
 
@@ -210,5 +210,52 @@
         document.getElementById('delete_class_id').value = id;
         document.getElementById('delete_class_name').textContent  = name;
     }
+
+    document.getElementById('edit_class_form').addEventListener('submit', function (event) {
+        event.preventDefault();  // Prevent default form submission
+    
+        const formData = new FormData(this);
+    
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Class edited successfully');
+                const editModal = document.getElementById('edit_class_modal');
+                editModal.close();
+            } else {
+                // แสดงข้อผิดพลาดใน modal
+                displayFormErrors(data.errors);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+
+    function displayFormErrors(errors) {
+        // ตรวจสอบว่ามีข้อผิดพลาดระดับฟอร์มหรือไม่
+        console.log(errors);
+        if (errors.__all__) {
+            const formErrorElement = document.querySelector('#form_error');  // อ้างอิงถึง element สำหรับแสดงข้อผิดพลาดของฟอร์ม
+            if (formErrorElement) {
+                formErrorElement.textContent = errors.__all__.join(', ');  // แสดงข้อผิดพลาดระดับฟอร์ม
+            }
+        }
+        // วนลูปแสดงข้อผิดพลาดในฟอร์ม
+        for (let field in errors) {
+            const errorText = errors[field].join(', ');
+            const errorElement = document.querySelector(`#${field}_error`);
+            
+            if (errorElement) {
+                errorElement.textContent = errorText;  // แสดงข้อผิดพลาดในฟอร์ม
+            }
+        }
+    }
+
 </script>
 {% endblock %}

@@ -12,7 +12,9 @@ urlpatterns = [
 
     # Trainer pages
     path("ManageClasses/", views.ManageClasses.as_view(), name="manage_classes"),
-    path("ScheduleClasses/", views.ClassesScheduleView.as_view(), name="classes_schedule"),
+    path("ClassesSchedule/", views.ClassesScheduleView.as_view(), name="classes_schedule"),
+    path("ClassSchedule/<int:class_id>/", views.ClassScheduleView.as_view(), name="class_schedule"),
+    path("ClassSchedule/add/", views.ClassScheduleView.as_view(), name="add_class_schedule"),
 
     # path("index/", views.index, name="index"),
 ]
