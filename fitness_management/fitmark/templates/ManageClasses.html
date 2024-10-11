@@ -63,25 +63,22 @@
             <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
           </form>
 
-          <form action="{% url 'manage_classes' %}" method="POST" enctype="multipart/form-data">
+          <form id="add_class_form"  action="{% url 'manage_classes' %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <h2 class="text-center text-5xl font-semibold text-primary mb-12">เพิ่มคลาส</h2>
-            {{ form.non_field_errors }}
             
             <input type="hidden" name="_method" value="POST"/> 
 
-            {{ form.name.errors }}
             <!-- Class Name input -->
             <label class="input input-ghost flex items-center gap-2 text-gray-400 mb-4 w-3/4">
                 ชื่อคลาส
                 <input type="text" class="grow border-none focus:ring-0" id="name" name="name" placeholder="" required/>
             </label>
             
-            {{ form.detail.errors }}
             <!-- Class Detail input -->
             <textarea class="textarea textarea-ghost h-20 w-3/4" id="detail" name="detail" placeholder="รายละเอียด"></textarea>
             
-            {{ form.price.errors }}
+            <div id="price_error" class="text-red-500"></div>
             <!-- Class Price input -->
             <label class="input input-ghost flex items-center gap-2 mb-6 w-1/2">
                 <svg xmlns="http://www.w3.org/2000/svg" 
@@ -89,8 +86,7 @@
                 <path d="M11.767 19.089c4.924.868 6.14-6.025 1.216-6.894m-1.216 6.894L5.86 18.047m5.908 1.042-.347 1.97m1.563-8.864c4.924.869 6.14-6.025 1.215-6.893m-1.215 6.893-3.94-.694m5.155-6.2L8.29 4.26m5.908 1.042.348-1.97M7.48 20.364l3.126-17.727"/></svg>
                 <input type="number" class="grow border-none focus:ring-0" id="price" name="price" placeholder="ราคา" required/>
             </label>
-            
-            {{ form.image.errors }}
+
             <!-- Class Image input -->
             <label class="input input-ghost flex items-center gap-2 mb-4 text-gray-400">
                 รูปภาพ
@@ -135,6 +131,7 @@
                 <!-- Class Description input -->
                 <textarea class="textarea textarea-ghost h-20 w-3/4" id="edit_class_detail" name="detail" placeholder="รายละเอียด"></textarea>
 
+                <div id="price_error" class="text-red-500"></div>
                 <!-- Class Price input -->
                 <label class="input input-ghost flex items-center gap-2 mb-6 w-1/2">
                     <input type="number" id="edit_class_price" name="price" class="grow border-none focus:ring-0" placeholder="ราคา" required/>
@@ -211,6 +208,32 @@
         document.getElementById('delete_class_name').textContent  = name;
     }
 
+    document.getElementById('add_class_form').addEventListener('submit', function (event) {
+        event.preventDefault();  // Prevent default form submission
+    
+        const formData = new FormData(this);
+    
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const addModal = document.getElementById('add_class_modal');
+                addModal.close();
+                window.location.reload();
+            } else {
+                // แสดงข้อผิดพลาดใน modal
+                displayFormErrors(data.errors);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+
     document.getElementById('edit_class_form').addEventListener('submit', function (event) {
         event.preventDefault();  // Prevent default form submission
     
@@ -226,9 +249,9 @@
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert('Class edited successfully');
                 const editModal = document.getElementById('edit_class_modal');
                 editModal.close();
+                window.location.reload();
             } else {
                 // แสดงข้อผิดพลาดใน modal
                 displayFormErrors(data.errors);

@@ -13,6 +13,9 @@
         <!-- Flatpickr CSS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
+        <!-- Alertify CSS -->
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/css/alertify.min.css"/>
+
         <!-- front for logo -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,8 +40,16 @@
         </main>
     </body>
 
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/alertify.min.js"></script>
+    <script>
+        {% for flashmsg in messages %}
+            alertify.set('notifier','position', 'top-right');
+            alertify.{{ flashmsg.tags }}('{{ flashmsg }}');
+        {% endfor %}
+    </script>
     {% block script %}
     {% comment %} <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script> {% endcomment %}
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     {% endblock %}
 </html>

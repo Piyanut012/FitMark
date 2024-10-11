@@ -42,10 +42,10 @@ class Trainer(models.Model):
 class Class(models.Model):
     name = models.CharField(max_length=50)
     detail = models.TextField(null=True, blank=True)
-    price = models.DecimalField(default=0, max_digits=5, decimal_places=2)
+    price = models.DecimalField(default=0, max_digits=6, decimal_places=2)
     image = models.URLField(max_length=200, null=True, blank=True)
     trainer = models.ForeignKey(
-        Trainer, 
+        Trainer,
         on_delete=models.CASCADE, 
     )
 
@@ -56,8 +56,8 @@ class Schedule(models.Model):
     date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField()
-    capacity = models.PositiveIntegerField()
-    booked_seats = models.PositiveIntegerField(default=0)
+    capacity = models.IntegerField()
+    booked_seats = models.IntegerField(default=0)
     class_instacne = models.ForeignKey(
         Class, 
         on_delete=models.CASCADE,

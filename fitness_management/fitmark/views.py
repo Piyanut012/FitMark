@@ -95,11 +95,10 @@ class ManageClasses(LoginRequiredMixin, View):
                 class_instance = form.save(commit=False)
                 class_instance.trainer = request.user.trainer
                 class_instance.save()
-                return redirect('manage_classes')
+                messages.success(request, "เพิ่มคลาสสำเร็จ")
+                return JsonResponse({"success": True})
             else:
-                print(form.errors)
-            
-            return render(request, 'ManageClasses.html', {'form': form})
+                return JsonResponse({"success": False, "errors": form.errors}, status=400)
         
         elif request.POST.get('_method') == 'PUT':
             class_id = request.POST.get('class_id')
@@ -109,31 +108,17 @@ class ManageClasses(LoginRequiredMixin, View):
 
             if form.is_valid():
                 form.save()
-                messages.success(request, "Class edited successfully")
+                messages.success(request, "แก้ไขคลาสสำเร็จ")
                 return JsonResponse({"success": True})
             else:
-                # Return JSON response with form errors and mark success as False
                 return JsonResponse({"success": False, "errors": form.errors}, status=400)
         
         elif request.POST.get('_method') == 'DELETE':
             class_id = request.POST.get('class_id')
             class_instance = get_object_or_404(Class, id=class_id)
             class_instance.delete()
+            messages.success(request, "ลบคลาสสำเร็จ")
             return redirect('manage_classes')
-    
-    # def put(self, request):
-    #     class_id = request.POST.get('edit_class_id')
-    #     print(class_id)
-    #     class_instance = get_object_or_404(Class, id=class_id)
-    #     form = ClassForm(request.POST ,instance=class_instance)
-
-    #     if form.is_valid():
-    #         form.save()
-    #         messages.success(request, "Class edited successfully")
-    #         return JsonResponse({"success": True})
-    #     else:
-    #         # Return JSON response with form errors and mark success as False
-    #         return JsonResponse({"success": False, "errors": form.errors}, status=400)
 
 class ClassesScheduleView(LoginRequiredMixin, View):
     login_url = '/login/'
@@ -153,10 +138,11 @@ class ClassScheduleView(LoginRequiredMixin, View):
 
     def get(self, request, class_id):
         class_instacne = get_object_or_404(Class, id=class_id)
-        schedules = Schedule.objects.filter(class_instacne=class_instacne)
+        schedules = Schedule.objects.filter(class_instacne=class_instacne).order_by('start_time')
         
         # สร้าง list ของวันที่ที่มี schedule
         schedule_data = [{
+            'id': schedule.id,
             'date': schedule.date.isoformat(),  # เก็บวันในรูปแบบ YYYY-MM-DD
             'start_time': schedule.start_time.strftime('%H:%M'),
             'end_time': schedule.end_time.strftime('%H:%M'),
@@ -168,7 +154,6 @@ class ClassScheduleView(LoginRequiredMixin, View):
     
     def post(self, request):
         class_id = request.POST.get('class_instance_id')
-        print(class_id)
         class_instance = get_object_or_404(Class, id=class_id)
         form = ScheduleForm(request.POST)
         
@@ -176,11 +161,36 @@ class ClassScheduleView(LoginRequiredMixin, View):
             schedule = form.save(commit=False)
             schedule.class_instacne = class_instance
             schedule.save()
-            messages.success(request, "Schedule added successfully")
+            messages.success(request, "เพิ่มกำหนดการสำเร็จ")
             return JsonResponse({"success": True})
         else:
             # Return JSON response with form errors and mark success as False
             return JsonResponse({"success": False, "errors": form.errors}, status=400)
+    
+    def delete(self, request, schedule_id):
+        schedule = get_object_or_404(Schedule, id=schedule_id)
+        schedule.delete()
+        messages.success(request, "ลบกำหนดการสำเร็จ")
+        return JsonResponse({"success": True})
+    
+class BookClassView(LoginRequiredMixin, View):
+    login_url = '/login/'
+
+    def get(self, request, class_id):
+        class_instacne = get_object_or_404(Class, id=class_id)
+        schedules = Schedule.objects.filter(class_instacne=class_instacne).order_by('start_time')
+        
+        # สร้าง list ของวันที่ที่มี schedule
+        schedule_data = [{
+            'id': schedule.id,
+            'date': schedule.date.isoformat(),  # เก็บวันในรูปแบบ YYYY-MM-DD
+            'start_time': schedule.start_time.strftime('%H:%M'),
+            'end_time': schedule.end_time.strftime('%H:%M'),
+            'booked_seats': schedule.booked_seats,
+            'capacity': schedule.capacity
+        } for schedule in schedules]
+
+        return JsonResponse(schedule_data, safe=False)
 
 
      
