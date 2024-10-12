@@ -7,14 +7,14 @@
 <section class="max-w-5xl mx-auto p-6">
     <div class="flex justify-between items-center">
         <h2 class="text-4xl font-bold text-accent mb-4">จัดการคลาส</h2>
-        <button class="bg-primary text-2xl text-white font-bold py-2 px-20 rounded-3xl hover:bg-pink-500" onclick="add_class_modal.showModal()">เพิ่มคลาส</button>
+        <button class="bg-primary text-2xl text-white font-bold py-2 px-20 rounded-3xl shadow-xl hover:bg-pink-500" onclick="add_class_modal.showModal()">เพิ่มคลาส</button>
     </div>
 
     {% for class in classes %}
     <!-- Class Cards -->
-    <div class=" p-4 flex justify-between items-center border-b-2 border-secondary">
-        <div class="flex items-center space-x-4">
-            <img src="{{ class.image }}" alt="Yoga" class="w-28 h-28 rounded-full object-cover">
+    <div class=" p-6 bg-gray-800 rounded-lg shadow-lg flex justify-between items-center mb-6">
+        <div class="flex items-center space-x-6">
+            <img src="{{ class.image }}" alt="{{ class.image }}" class="w-28 h-28 rounded-full object-cover">
             <div>
                 <h3 class="text-secondary text-2xl font-semibold">{{ class.name }}</h3>
                 <p class="text-gray-400">{{ class.detail }}</p>

@@ -15,7 +15,7 @@ class ExtendedUserCreationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'phone_number', 'password1', 'password2')
+        fields = ['username', 'first_name', 'last_name', 'email', 'phone_number', 'password1', 'password2']
 
 class ClassForm(ModelForm):
     class Meta:
@@ -36,11 +36,6 @@ class ScheduleForm(ModelForm):
     class Meta:
         model = Schedule
         fields = ['date', 'start_time', 'end_time', 'capacity']
-        error_messages = {
-            'date': {
-                'required': "กรุณาเลือกวันที่",
-            },
-        }
 
     def clean(self):
         cleaned_data = super().clean()
@@ -80,14 +75,6 @@ class ScheduleForm(ModelForm):
 
         return cleaned_data
     
-    def clean_date(self):
-        date = self.cleaned_data.get('date')
-
-        if date <= datetime.date.today():
-            raise forms.ValidationError("ต้องเลือกวันที่ในอนาคต")
-        
-        return date
-    
     def clean_capacity(self):
         capacity = self.cleaned_data.get('capacity')
 
@@ -96,7 +83,7 @@ class ScheduleForm(ModelForm):
         elif capacity > 50:
             raise forms.ValidationError("จำนวนคนต้องไม่เกิน 50")
 
-        return 
+        return capacity
     
 class BookingForm(ModelForm):
 

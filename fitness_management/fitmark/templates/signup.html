@@ -6,8 +6,8 @@
     <section class="absolute inset-0 flex items-center justify-center">
       <form class="bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-2xl" action="{% url 'signup' %}" method="POST">
         {% csrf_token %}
-        <h2 class="text-center text-5xl font-semibold text-white mb-12">Sign up</h2>
-        {{ form.non_field_errors }}
+        <h2 class="text-center text-5xl font-semibold text-white mb-12">ลงทะเบียน</h2>
+        <span class="text-red-500">{{ form.non_field_errors }}</span>
     
         <!-- Username input -->
         {{ form.username.errors }}

@@ -9,6 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
+from django.utils import timezone
 
 class FirstPageView(View):
 
@@ -19,7 +20,7 @@ class LoginView(View):
 
     def get(self, request):
         form = AuthenticationForm()
-        return render(request, 'login.html', {"form": None})
+        return render(request, 'login.html', {"form": form})
 
     def post(self, request):
         form = AuthenticationForm(data=request.POST)
@@ -180,9 +181,11 @@ class BookClass(LoginRequiredMixin, View):
 
     def get(self, request, class_id):
         class_instacne = get_object_or_404(Class, id=class_id)
+        tomorrow = timezone.now().date() + timedelta(days=1)
         schedules = Schedule.objects.filter(
             class_instacne=class_instacne,
             booked_seats__lt=F('capacity'),
+            date__gt=tomorrow
         ).exclude(
             booking__customer=request.user.customer  # Exclude schedules already booked by the customer
         ).order_by('start_time')
@@ -218,12 +221,20 @@ class MyBookingView(LoginRequiredMixin, View):
 
     def get(self, request):
         customer = request.user.customer
-        bookings = Booking.objects.filter(customer=customer)
+        bookings = Booking.objects.filter(customer=customer).order_by('schedule__date', 'schedule__start_time')
         context = {
             "user": customer,
             "bookings": bookings
         }
         return render(request, 'mybooking.html', context)
+    
+    def delete(self, request, booking_id):
+        booking = get_object_or_404(Booking, id=booking_id)
+        booking.schedule.booked_seats -= 1
+        booking.schedule.save()
+        booking.delete()
+        messages.success(request, "ยกเลิกการจองสำเร็จ")
+        return JsonResponse({"success": True})
 
 
 

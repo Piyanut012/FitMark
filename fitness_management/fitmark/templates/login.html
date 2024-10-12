@@ -6,11 +6,10 @@
     <section class="absolute inset-0 flex items-center justify-center">
       <form class="bg-gray-800 p-10 rounded-lg shadow-xl w-full max-w-md" action="{% url 'login' %}" method="POST">
         {% csrf_token %}
-        <h2 class="text-center text-5xl font-semibold text-white mb-12">Login</h2>
-        {{ form.non_field_errors }}
+        <h2 class="text-center text-5xl font-semibold text-white mb-12">เข้าสู่ระบบ</h2>
+        <span class="text-red-500">{{ form.non_field_errors }}</span>
         
         <!-- Username input -->
-        {{ form.username.errors }}
         <label class="input input-ghost flex items-center gap-2 mb-4">
             <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -24,7 +23,6 @@
         </label>
 
         <!-- Password input -->
-        {{ form.password.errors }}
         <label class="input input-ghost flex items-center gap-2 mb-6">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -50,7 +48,7 @@
         <!-- Sign up link -->
         <div class="text-center mt-10">
             <p class="text-gray-400 text-sm">ยังไม่มีบัญชีใช่ไหม?</p>
-            <a href="{% url 'signup' %}" class="text-accent hover:underline">Sign up</a>
+            <a href="{% url 'signup' %}" class="text-accent hover:underline">ลงทะเบียน</a>
         </div>
       </form>
     </section>

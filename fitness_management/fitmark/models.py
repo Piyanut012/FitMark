@@ -42,7 +42,7 @@ class Trainer(models.Model):
 class Class(models.Model):
     name = models.CharField(max_length=50)
     detail = models.TextField(null=True, blank=True)
-    price = models.DecimalField(default=0, max_digits=6, decimal_places=2)
+    price = models.IntegerField(default=0)
     image = models.URLField(max_length=200, null=True, blank=True)
     trainer = models.ForeignKey(
         Trainer,

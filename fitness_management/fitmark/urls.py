@@ -13,6 +13,7 @@ urlpatterns = [
     path("BookClass/<int:class_id>/", views.BookClass.as_view(), name="book_class"),
     path("BookClass/add/", views.BookClass.as_view(), name="add_book_class"),
     path("MyBooking/", views.MyBookingView.as_view(), name="my_booking"),
+    path("MyBooking/delete/<int:booking_id>/", views.MyBookingView.as_view(), name="delete_my_booking"),
 
     # Trainer pages
     path("ManageClasses/", views.ManageClasses.as_view(), name="manage_classes"),
