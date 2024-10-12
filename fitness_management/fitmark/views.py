@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.db.models import F
 from .models import *
 from .forms import *
 from django.views import View
@@ -30,7 +31,7 @@ class LoginView(View):
             if hasattr(user, 'customer'):
                 return redirect('booking')
             elif hasattr(user, 'trainer'):
-                return redirect('manage_classes')
+                return redirect('classes_schedule')
             
         return render(request, 'login.html', {"form": form})
 
@@ -61,20 +62,7 @@ class SignUpView(View):
             return redirect('login')
         return render(request, 'signup.html', {'form': form})
 
-
-class BookingView(LoginRequiredMixin, View):
-    login_url = '/login/'
-
-    def get(self, request):
-        customer = request.user.customer
-        classes = Class.objects.all()
-        context = {
-            "user": customer,
-            "classes": classes
-        }
-        # form = BookingForm()
-        return render(request, 'booking.html', context)
-
+# Trainer
 class ManageClasses(LoginRequiredMixin, View):
     login_url = '/login/'
 
@@ -172,13 +160,32 @@ class ClassScheduleView(LoginRequiredMixin, View):
         schedule.delete()
         messages.success(request, "ลบกำหนดการสำเร็จ")
         return JsonResponse({"success": True})
-    
+
+# Customer
 class BookClassView(LoginRequiredMixin, View):
+    login_url = '/login/'
+
+    def get(self, request):
+        customer = request.user.customer
+        classes = Class.objects.all()
+        context = {
+            "user": customer,
+            "classes": classes
+        }
+        # form = BookingForm()
+        return render(request, 'booking.html', context)
+
+class BookClass(LoginRequiredMixin, View):
     login_url = '/login/'
 
     def get(self, request, class_id):
         class_instacne = get_object_or_404(Class, id=class_id)
-        schedules = Schedule.objects.filter(class_instacne=class_instacne).order_by('start_time')
+        schedules = Schedule.objects.filter(
+            class_instacne=class_instacne,
+            booked_seats__lt=F('capacity'),
+        ).exclude(
+            booking__customer=request.user.customer  # Exclude schedules already booked by the customer
+        ).order_by('start_time')
         
         # สร้าง list ของวันที่ที่มี schedule
         schedule_data = [{
@@ -191,6 +198,33 @@ class BookClassView(LoginRequiredMixin, View):
         } for schedule in schedules]
 
         return JsonResponse(schedule_data, safe=False)
+    
+    def post(self, request):
+        schedule_id = request.POST.get('schedule_id')
+        schedule = get_object_or_404(Schedule, id=schedule_id)
+        schedule.booked_seats += 1
+        schedule.save()
+         # Create a new booking
+        booking = Booking.objects.create(
+            schedule=schedule,
+            customer=request.user.customer
+        )
+        booking.save()
+        messages.success(request, "จองคลาสสำเร็จ")
+        return JsonResponse({"success": True})
+
+class MyBookingView(LoginRequiredMixin, View):
+    login_url = '/login/'
+
+    def get(self, request):
+        customer = request.user.customer
+        bookings = Booking.objects.filter(customer=customer)
+        context = {
+            "user": customer,
+            "bookings": bookings
+        }
+        return render(request, 'mybooking.html', context)
+
 
 
      

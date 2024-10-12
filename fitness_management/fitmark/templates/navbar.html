@@ -5,11 +5,11 @@
         <div class="text-2xl text-gray-400 flex space-x-0 items-stretch">
             {% if request.user.customer %}
             <a href="{% url 'booking' %}" class=" py-4 px-4 hover:text-accent">จองคลาส</a>
-            <a href="#" class=" py-4 px-4 hover:text-accent">การจองของฉัน</a>
+            <a href="{% url 'my_booking' %}" class=" py-4 px-4 hover:text-accent">การจองของฉัน</a>
             <a href="#" class=" py-4 px-4 hover:text-accent">สมาชิก</a>
             {% elif request.user.trainer %}
-            <a href="{% url 'manage_classes' %}" class=" py-4 px-4 hover:text-accent">จัดการคลาส</a>
             <a href="{% url 'classes_schedule' %}" class=" py-4 px-4 hover:text-accent">ตารางคลาส</a>
+            <a href="{% url 'manage_classes' %}" class=" py-4 px-4 hover:text-accent">จัดการคลาส</a>
             {% endif %}
         </div>
         <div class="flex items-center space-x-6">

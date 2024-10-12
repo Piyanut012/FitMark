@@ -9,8 +9,10 @@ urlpatterns = [
     path("signup/", views.SignUpView.as_view(), name="signup"),
 
     # Customer pages
-    path("booking/", views.BookingView.as_view(), name="booking"),
-    path("BookClass/<int:class_id>/", views.BookClassView.as_view(), name="book_class"),
+    path("BookClass/", views.BookClassView.as_view(), name="booking"),
+    path("BookClass/<int:class_id>/", views.BookClass.as_view(), name="book_class"),
+    path("BookClass/add/", views.BookClass.as_view(), name="add_book_class"),
+    path("MyBooking/", views.MyBookingView.as_view(), name="my_booking"),
 
     # Trainer pages
     path("ManageClasses/", views.ManageClasses.as_view(), name="manage_classes"),

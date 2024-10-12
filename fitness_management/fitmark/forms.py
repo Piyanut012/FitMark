@@ -5,6 +5,7 @@ from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.models import User
 from .models import *
+from django.db.models import F
 
 class ExtendedUserCreationForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=True)
@@ -95,4 +96,13 @@ class ScheduleForm(ModelForm):
         elif capacity > 50:
             raise forms.ValidationError("จำนวนคนต้องไม่เกิน 50")
 
-        return capacity
+        return 
+    
+class BookingForm(ModelForm):
+
+    class Meta:
+        model = Booking
+        fields = ['schedule']
+
+    
+
