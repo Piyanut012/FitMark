@@ -84,12 +84,7 @@ class ScheduleForm(ModelForm):
             raise forms.ValidationError("จำนวนคนต้องไม่เกิน 50")
 
         return capacity
-    
-class BookingForm(ModelForm):
 
-    class Meta:
-        model = Booking
-        fields = ['schedule']
 
     
 

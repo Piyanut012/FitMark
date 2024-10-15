@@ -3,9 +3,10 @@ from django.db.models import F
 from .models import *
 from .forms import *
 from django.views import View
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import login, logout
+from django.contrib.auth.models import Group
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
@@ -15,6 +16,19 @@ class FirstPageView(View):
 
     def get(self, request):
         return render(request, 'first_page.html', {})
+    
+class ClassView(View):
+
+    def get(self, request):
+
+        if request.user.is_authenticated:
+            if hasattr(request.user, 'customer'):
+                return redirect('booking')
+            elif hasattr(request.user, 'trainer'):
+                return redirect('classes_schedule')
+
+        classes = Class.objects.all()
+        return render(request, 'Classes.html', {"classes": classes})
 
 class LoginView(View):
 
@@ -60,12 +74,24 @@ class SignUpView(View):
                 email=form.cleaned_data['email'],
                 phone_number=form.cleaned_data['phone_number'],
             )
+            customer_group = Group.objects.get(name='Customer')
+            user.groups.add(customer_group)
             return redirect('login')
         return render(request, 'signup.html', {'form': form})
 
 # Trainer
-class ManageClasses(LoginRequiredMixin, View):
+class ManageClasses(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/login/'
+    permission_required = ["fitmark.view_class", "fitmark.add_class", "fitmark.change_class", "fitmark.delete_class"]
+
+    def handle_no_permission(self):
+
+        if not self.request.user.is_authenticated:
+            messages.error(self.request, "คุณต้องเข้าสู่ระบบก่อน")
+            return redirect(self.login_url)
+
+        messages.error(self.request, "คุณไม่มีสิทธิ์เข้าถึงหน้านี้")
+        return redirect('booking')
 
     def get(self, request):
         trainer = request.user.trainer
@@ -109,8 +135,18 @@ class ManageClasses(LoginRequiredMixin, View):
             messages.success(request, "ลบคลาสสำเร็จ")
             return redirect('manage_classes')
 
-class ClassesScheduleView(LoginRequiredMixin, View):
+class ClassesScheduleView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/login/'
+    permission_required = ["fitmark.view_class"]
+    
+    def handle_no_permission(self):
+
+        if not self.request.user.is_authenticated:
+            messages.error(self.request, "คุณต้องเข้าสู่ระบบก่อน")
+            return redirect(self.login_url)
+
+        messages.error(self.request, "คุณไม่มีสิทธิ์เข้าถึงหน้านี้")
+        return redirect('booking')
 
     def get(self, request):
         trainer = request.user.trainer
@@ -122,8 +158,18 @@ class ClassesScheduleView(LoginRequiredMixin, View):
 
         return render(request, 'ClassesSchedule.html', context)
     
-class ClassScheduleView(LoginRequiredMixin, View):
+class ClassScheduleView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/login/'
+    permission_required = ["fitmark.view_schedule", "fitmark.add_schedule", "fitmark.delete_schedule"]
+
+    def handle_no_permission(self):
+
+        if not self.request.user.is_authenticated:
+            messages.error(self.request, "คุณต้องเข้าสู่ระบบก่อน")
+            return redirect(self.login_url)
+
+        messages.error(self.request, "คุณไม่มีสิทธิ์เข้าถึงหน้านี้")
+        return redirect('booking')
 
     def get(self, request, class_id):
         class_instacne = get_object_or_404(Class, id=class_id)
@@ -163,9 +209,19 @@ class ClassScheduleView(LoginRequiredMixin, View):
         return JsonResponse({"success": True})
 
 # Customer
-class BookClassView(LoginRequiredMixin, View):
+class BookClassView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/login/'
+    permission_required = ["fitmark.view_class"]
 
+    def handle_no_permission(self):
+
+        if not self.request.user.is_authenticated:
+            messages.error(self.request, "คุณต้องเข้าสู่ระบบก่อน")
+            return redirect(self.login_url)
+
+        messages.error(self.request, "คุณไม่มีสิทธิ์เข้าถึงหน้านี้")
+        return redirect('classes_schedule')
+ 
     def get(self, request):
         customer = request.user.customer
         classes = Class.objects.all()
@@ -176,8 +232,18 @@ class BookClassView(LoginRequiredMixin, View):
         # form = BookingForm()
         return render(request, 'booking.html', context)
 
-class BookClass(LoginRequiredMixin, View):
+class BookClass(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/login/'
+    permission_required = ["fitmark.view_schedule", "fitmark.add_booking"]
+
+    def handle_no_permission(self):
+
+        if not self.request.user.is_authenticated:
+            messages.error(self.request, "คุณต้องเข้าสู่ระบบก่อน")
+            return redirect(self.login_url)
+
+        messages.error(self.request, "คุณไม่มีสิทธิ์เข้าถึงหน้านี้")
+        return redirect('classes_schedule')
 
     def get(self, request, class_id):
         class_instacne = get_object_or_404(Class, id=class_id)
@@ -216,8 +282,18 @@ class BookClass(LoginRequiredMixin, View):
         messages.success(request, "จองคลาสสำเร็จ")
         return JsonResponse({"success": True})
 
-class MyBookingView(LoginRequiredMixin, View):
+class MyBookingView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/login/'
+    permission_required = ["fitmark.view_booking", "fitmark.delete_booking"]
+
+    def handle_no_permission(self):
+
+        if not self.request.user.is_authenticated:
+            messages.error(self.request, "คุณต้องเข้าสู่ระบบก่อน")
+            return redirect(self.login_url)
+
+        messages.error(self.request, "คุณไม่มีสิทธิ์เข้าถึงหน้านี้")
+        return redirect('classes_schedule')
 
     def get(self, request):
         customer = request.user.customer
