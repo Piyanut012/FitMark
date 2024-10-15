@@ -11,6 +11,8 @@ from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from django.utils import timezone
+import qrcode
+from io import BytesIO
 
 class FirstPageView(View):
 
@@ -312,7 +314,46 @@ class MyBookingView(LoginRequiredMixin, PermissionRequiredMixin, View):
         messages.success(request, "ยกเลิกการจองสำเร็จ")
         return JsonResponse({"success": True})
 
+class MembershipsView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    login_url = '/login/'
+    permission_required = ["fitmark.view_membership"]
 
+    def handle_no_permission(self):
+
+        if not self.request.user.is_authenticated:
+            messages.error(self.request, "คุณต้องเข้าสู่ระบบก่อน")
+            return redirect(self.login_url)
+
+        messages.error(self.request, "คุณไม่มีสิทธิ์เข้าถึงหน้านี้")
+        return redirect('classes_schedule')
+
+    def get(self, request):
+        memberships = Membership.objects.all()
+        return render(request, 'Membership.html', {"memberships": memberships})
+
+class GenerateQRCodeView(View):
+    def get(self, request, membership_id):
+        membership = get_object_or_404(Membership, id=membership_id)
+        
+        # สร้างข้อมูลสำหรับ QR code
+        qr_data = f"สมัครสมาชิก {membership.name} ราคา {membership.price} บาท"
+        
+        # สร้าง QR code
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(qr_data)
+        qr.make(fit=True)
+        
+        img = qr.make_image(fill='black', back_color='white')
+        buffer = BytesIO()
+        img.save(buffer, format="PNG")
+        buffer.seek(0)
+
+        return HttpResponse(buffer, content_type="image/png")
 
      
 
