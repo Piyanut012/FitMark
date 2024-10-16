@@ -33,10 +33,9 @@ class Customer(models.Model):
         return f"{self.first_name} {self.last_name}"
     
     def check_membership_expired(self):
-        """เช็คว่าสมาชิกหมดอายุหรือไม่"""
+        # เช็คว่าสมาชิกหมดอายุหรือไม่
         if self.membership and self.membership_expiry_date:
             if date.today() > self.membership_expiry_date:
-                # ถ้าหมดอายุให้ลบสมาชิกและคืนค่าเป็น None
                 self.membership = None
                 self.free_classes_remaining = 0
                 self.membership_expiry_date = None
@@ -108,23 +107,20 @@ class Booking(models.Model):
         return f"Booking by {self.customer} on {self.created_at}"
     
     def save(self, *args, **kwargs):
-        # ตรวจสอบสมาชิกและ Quota ก่อนการบันทึก
+        # ตรวจสอบสมาชิก
         if self.customer.membership:
-            # ตรวจสอบ Quota ของสมาชิก
             if self.customer.free_classes_remaining > 0:
-                self.used_quota = True  # ใช้ Quota ในการจอง
-                self.customer.free_classes_remaining -= 1  # ลดจำนวนคลาสฟรีที่เหลือ
+                self.used_quota = True
+                self.customer.free_classes_remaining -= 1
                 print(self.customer.free_classes_remaining)
                 self.customer.save()
 
         super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        # ตรวจสอบสมาชิกและ Quota ก่อนการบันทึก
         if self.customer.membership:
-            # ตรวจสอบ Quota ของสมาชิก
             if self.customer.free_classes_remaining > 0:
-                self.customer.free_classes_remaining += 1  # ลดจำนวนคลาสฟรีที่เหลือ
+                self.customer.free_classes_remaining += 1
                 self.customer.save()
 
         super().delete(*args, **kwargs)

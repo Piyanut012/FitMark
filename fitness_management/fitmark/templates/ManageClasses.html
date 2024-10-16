@@ -35,27 +35,6 @@
     <div class="text-center text-2xl text-gray-400">ไม่มีคลาส</div>
     {% endfor %}
 
-    {% comment %} <div class=" p-4 flex justify-between items-center border-b-2 border-secondary">
-        <div class="flex items-center space-x-4">
-            <img src="https://th.bing.com/th/id/OIP.iJzZ1xTxVSx9pMPpDlHAlQHaEK?rs=1&pid=ImgDetMain" alt="Yoga" class="w-28 h-28 rounded-full object-cover">
-            <div>
-                <h3 class="text-secondary text-2xl font-semibold">โยคะพื้นฐาน</h3>
-                <p class="text-gray-400">ฝึกโยคะพื้นฐานเบื้องต้น สามารถนำไปปรับใช้ได้</p>
-            </div>
-        </div>
-        <div class="flex items-center text-lg space-x-12 mr-10">
-            <button class="text-yellow-600 hover:text-yellow-400" onclick="edit_class_modal.showModal()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
-            </button>    
-            <button class="text-red-400 hover:text-red-600" onclick="delete_class_modal.showModal()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>    
-            </button>
-        </div>
-    </div> {% endcomment %}
-
-    <!-- Repeat for multiple classes -->
-    
-     
     <!-- Add Class Modal -->
     <dialog id="add_class_modal" class="modal">
         <div class="modal-box bg-gray-800 w-full max-w-2xl">
@@ -199,17 +178,15 @@
     }
 
     function showDeleteModal(id, name) {
-        // เปิด modal
         const deleteModal = document.getElementById('delete_class_modal');
         deleteModal.showModal();
         
-        // ตั้งค่าฟิลด์ฟอร์มให้มีค่าเท่ากับข้อมูลของคลาสนั้น ๆ
         document.getElementById('delete_class_id').value = id;
         document.getElementById('delete_class_name').textContent  = name;
     }
 
     document.getElementById('add_class_form').addEventListener('submit', function (event) {
-        event.preventDefault();  // Prevent default form submission
+        event.preventDefault();
     
         const formData = new FormData(this);
     
@@ -235,7 +212,7 @@
     });
 
     document.getElementById('edit_class_form').addEventListener('submit', function (event) {
-        event.preventDefault();  // Prevent default form submission
+        event.preventDefault();
     
         const formData = new FormData(this);
     
@@ -261,21 +238,21 @@
     });
 
     function displayFormErrors(errors) {
-        // ตรวจสอบว่ามีข้อผิดพลาดระดับฟอร์มหรือไม่
+        // ตรวจสอบว่ามีข้อผิดพลาดระดับ form
         console.log(errors);
         if (errors.__all__) {
-            const formErrorElement = document.querySelector('#form_error');  // อ้างอิงถึง element สำหรับแสดงข้อผิดพลาดของฟอร์ม
+            const formErrorElement = document.querySelector('#form_error');
             if (formErrorElement) {
-                formErrorElement.textContent = errors.__all__.join(', ');  // แสดงข้อผิดพลาดระดับฟอร์ม
+                formErrorElement.textContent = errors.__all__.join(', ');
             }
         }
-        // วนลูปแสดงข้อผิดพลาดในฟอร์ม
+        // แสดงข้อผิดพลาดระดับ field
         for (let field in errors) {
             const errorText = errors[field].join(', ');
             const errorElement = document.querySelector(`#${field}_error`);
             
             if (errorElement) {
-                errorElement.textContent = errorText;  // แสดงข้อผิดพลาดในฟอร์ม
+                errorElement.textContent = errorText;
             }
         }
     }

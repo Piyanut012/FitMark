@@ -116,20 +116,20 @@
 <script>
     function openScheduleModal(classId) {
 
-        // ดึงข้อมูล schedule ของคลาสจาก backend
         fetch(`/BookClass/${classId}/`)
         .then(response => response.json())
         .then(data => {
+            // แปลงรูปแบบ YYYY-MM-DD
             function formatDateToISO(date) {
                 const year = date.getUTCFullYear();
-                const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // เดือนเริ่มต้นจาก 0
+                const month = String(date.getUTCMonth() + 1).padStart(2, '0');
                 const day = String(date.getUTCDate()).padStart(2, '0');
-                return `${year}-${month}-${day}`; // รูปแบบ YYYY-MM-DD
+                return `${year}-${month}-${day}`;
             }
-            // เก็บวันที่ที่มี schedule ลงใน highlightedDates
+            // วันที่ที่สามารถจอง
             const enableDates = Array.from(new Set(data.map(schedule => formatDateToISO(new Date(schedule.date)))));
     
-            // ตั้งค่า flatpickr และ highlight วันที่
+            // ตั้งค่า flatpickr 
             const datepicker = flatpickr("#datepicker-inline", {
                 inline: true,
                 locale: "th",
@@ -148,10 +148,10 @@
                     const day = String(selectedDateOriginal.getDate()).padStart(2, '0');
                     const selectedDate = `${year}-${month}-${day}`;
                     
-                    // ดึงข้อมูล schedule ของวันที่ที่เลือกจาก data
+                    // ดึงข้อมูล schedule
                     const schedulesForSelectedDate = data.filter(schedule => schedule.date === selectedDate);
                     
-                    // แสดง schedule ใน element ที่ต้องการ
+                    // สร้าง options สำหรับ select
                     let scheduleOptions = '';
                     schedulesForSelectedDate.forEach(schedule => {
                         console.log(schedule);
@@ -187,6 +187,7 @@
         window.location.reload();
     }
 
+    // กดจองคลาส
     document.getElementById('book_class_form').addEventListener('submit', function (event) {
         event.preventDefault();
     

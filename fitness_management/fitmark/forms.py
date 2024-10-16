@@ -58,18 +58,16 @@ class ScheduleForm(ModelForm):
             minutes=end_time.minute - start_time.minute
         )
 
-        # ตรวจสอบว่าความแตกต่างของเวลาต้องไม่น้อยกว่า 45 นาที
         if time_diff < timedelta(minutes=45):
             raise forms.ValidationError("ช่วงเวลาต้องไม่น้อยกว่า 45 นาที")
         
         # ดึงข้อมูล Schedule ทั้งหมดในวันเดียวกัน
         overlapping_schedules = Schedule.objects.filter(
             date=date,
-            start_time__lt=end_time,  # start_time ของ schedule อื่น ๆ น้อยกว่า end_time ที่กรอก
-            end_time__gt=start_time   # end_time ของ schedule อื่น ๆ มากกว่า start_time ที่กรอก
+            start_time__lt=end_time,
+            end_time__gt=start_time
         )
 
-        # ถ้ามีการทับซ้อน
         if overlapping_schedules.exists():
             raise forms.ValidationError("เวลาที่เลือกทับซ้อนกับกำหนดการอื่นแล้ว")
 

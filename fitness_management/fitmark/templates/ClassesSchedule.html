@@ -32,10 +32,6 @@
     }
     
 </style>
-{% comment %} .flatpickr-day{
-    color: #FF79C6;
-    font-weight: bold;
-} {% endcomment %}
 
 {% endblock %}
 {% block nav %}{% include "navbar.html" %}{% endblock %}
@@ -180,9 +176,10 @@
 {% block script %}
 <script>
 
+    // แปลง date ให้เป็นรูปแบบ YYYY-MM-DD
     function formattedDate(date) {
         const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // เดือนเริ่มต้นที่ 0
+        const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
     }
@@ -191,11 +188,10 @@
 
         document.getElementById('class_instance_id').value = classId;
 
-        // ดึงข้อมูล schedule ของคลาสจาก backend
         fetch(`/ClassSchedule/${classId}/`)
         .then(response => response.json())
         .then(data => {
-            // เก็บวันที่ที่มี schedule ลงใน highlightedDates
+            
             const highlightedDates = Array.from(new Set(data.map(schedule => schedule.date)));
     
             // ตั้งค่า flatpickr และ highlight วันที่
@@ -227,8 +223,6 @@
                     const month = String(selectedDateOriginal.getMonth() + 1).padStart(2, '0');
                     const day = String(selectedDateOriginal.getDate()).padStart(2, '0');
                     const selectedDate = `${year}-${month}-${day}`;
-            
-                    console.log(selectedDate);
                     
                     // อัปเดตค่า selected_date ใน form
                     document.getElementById('selected_date').value = selectedDate;
@@ -236,8 +230,7 @@
                     // ดึงข้อมูล schedule ของวันที่ที่เลือกจาก data
                     const schedulesForSelectedDate = data.filter(schedule => schedule.date === selectedDate);
                     
-
-                    // แสดง schedule ใน element ที่ต้องการ
+                    // สร้าง schedule list
                     let scheduleList = '';
                     schedulesForSelectedDate.forEach(schedule => {
                         scheduleList += `
@@ -261,7 +254,7 @@
                 }
             });
     
-            // แสดง modal หลังจากโหลดข้อมูลเรียบร้อย
+            // แสดง modal
             const modal = document.getElementById('add_schedule_modal');
             modal.showModal();
         })
@@ -269,21 +262,12 @@
     }
 
     function closeScheduleModal() {
-        // ล้างค่า schedule_list
-        const scheduleListE = document.getElementById('schedule_list');
-
-        if (scheduleListE) {
-            scheduleListE.innerHTML = scheduleList; // ล้างเนื้อหาทั้งหมดใน schedule_list
-        }
-        // ปิด modal
-        const modal = document.getElementById('add_schedule_modal');
-        modal.close();
-
         window.location.reload();
     }
 
+    // เพิ่ม schedule
     document.getElementById('add_schedule_form').addEventListener('submit', function (event) {
-        event.preventDefault();  // Prevent default form submission
+        event.preventDefault();
     
         const formData = new FormData(this);
     
@@ -298,7 +282,6 @@
         .then(data => {
             if (data.success) {
                 closeScheduleModal();
-                window.location.reload();
             } else {
                 // แสดงข้อผิดพลาดใน modal
                 displayFormErrors(data.errors);
@@ -308,33 +291,28 @@
     });
     
     function displayFormErrors(errors) {
-        // ตรวจสอบว่ามีข้อผิดพลาดระดับฟอร์มหรือไม่
-        console.log(errors);
+        // ตรวจสอบว่ามีข้อผิดพลาดระดับ form
         if (errors.__all__) {
-            const formErrorElement = document.querySelector('#form_error');  // อ้างอิงถึง element สำหรับแสดงข้อผิดพลาดของฟอร์ม
+            const formErrorElement = document.querySelector('#form_error');
             if (formErrorElement) {
-                formErrorElement.textContent = errors.__all__.join(', ');  // แสดงข้อผิดพลาดระดับฟอร์ม
+                formErrorElement.textContent = errors.__all__.join(', ');
             }
         }
-        // วนลูปแสดงข้อผิดพลาดในฟอร์ม
+        // แสดงข้อผิดพลาดระดับ field
         for (let field in errors) {
             const errorText = errors[field].join(', ');
             const errorElement = document.querySelector(`#${field}_error`);
             
             if (errorElement) {
-                errorElement.textContent = errorText;  // แสดงข้อผิดพลาดในฟอร์ม
+                errorElement.textContent = errorText;
             }
         }
     }
     
     function showDeleteModal(id) {
-        // เปิด modal
         const deleteModal = document.getElementById('delete_schedule_modal');
         deleteModal.showModal();
 
-        console.log(id);
-        
-        // ตั้งค่าฟิลด์ฟอร์มให้มีค่าเท่ากับข้อมูลของคลาสนั้น ๆ
         document.getElementById('delete_schedule_id').value = id;
     }
 
@@ -351,7 +329,6 @@
         })
         .then(response => {
             if (response.ok) {
-                console.log('Deleted');
                 window.location.reload();
             }
         })
