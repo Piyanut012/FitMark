@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from datetime import date, timedelta
+from datetime import date
 
 # Create your models here.
 
@@ -82,6 +82,15 @@ class Schedule(models.Model):
 
     def __str__(self):
         return f"{self.class_instacne.name} on {self.date}"
+    
+    def delete(self, *args, **kwargs):
+        # คืนค่า free_classes_remaining ให้กับทุกๆ Customer ที่จองคลาสนี้
+        bookings = Booking.objects.filter(schedule=self)
+        for booking in bookings:
+            if booking.customer.membership:
+                booking.customer.free_classes_remaining += 1
+                booking.customer.save()
+        super().delete(*args, **kwargs)
 
 class Booking(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -119,15 +128,4 @@ class Booking(models.Model):
                 self.customer.save()
 
         super().delete(*args, **kwargs)
-    
-class Manager(models.Model):
-    username = models.CharField(max_length=50)
-    password = models.CharField(max_length=50)
-    first_name = models.CharField(max_length=150)
-    last_name = models.CharField(max_length=200)
-    email = models.EmailField(max_length=50, unique=True)
-    phone_number = models.CharField(max_length=10)
-
-    def __str__(self):
-        return f"{self.first_name} {self.last_name}"
 

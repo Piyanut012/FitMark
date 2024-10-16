@@ -8,7 +8,8 @@
 
         {% for booking in bookings %}
         <!-- Class Cards -->
-        <div class="p-6 bg-gray-800 rounded-lg shadow-lg flex justify-between items-center mb-6">
+        <div class="p-6 bg-gray-800 rounded-lg shadow-md flex justify-between items-center mb-6 
+        {% if booking.used_quota %}{% if user.membership.name == 'Gold Membership' %}shadow-accent{% elif user.membership.name == 'Platinum Membership' %}shadow-secondary{% endif %}{% endif %}">
             <div class="flex items-center space-x-4">
                 <img src="{{ booking.schedule.class_instacne.image}}" alt="{{ booking.schedule.class_instacne.image}}" class="w-28 h-28 rounded-full object-cover">
                 <div>

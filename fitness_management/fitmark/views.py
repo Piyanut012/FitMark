@@ -47,6 +47,11 @@ class LoginView(View):
             
             # Check role
             if hasattr(user, 'customer'):
+                if user.customer.membership:
+                    if user.customer.check_membership_expired():
+                        messages.error(request, "สมาชิกของคุณหมดอายุแล้ว ")
+                    else:
+                        messages.success(request, "สมาชิกของคุณยังไม่หมดอายุ")
                 return redirect('booking')
             elif hasattr(user, 'trainer'):
                 return redirect('classes_schedule')
@@ -176,7 +181,11 @@ class ClassScheduleView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
     def get(self, request, class_id):
         class_instacne = get_object_or_404(Class, id=class_id)
-        schedules = Schedule.objects.filter(class_instacne=class_instacne).order_by('start_time')
+        tomorrow = timezone.now().date() + timedelta(days=1)
+        schedules = Schedule.objects.filter(
+            class_instacne=class_instacne,
+            date__gte=tomorrow
+        ).order_by('start_time')
         
         # สร้าง list ของวันที่ที่มี schedule
         schedule_data = [{
@@ -226,7 +235,7 @@ class BookClassView(LoginRequiredMixin, PermissionRequiredMixin, View):
         return redirect('classes_schedule')
  
     def get(self, request):
-        customer = request.user.customer
+        customer = request.user.customer        
         classes = Class.objects.all()
         context = {
             "user": customer,
@@ -254,7 +263,7 @@ class BookClass(LoginRequiredMixin, PermissionRequiredMixin, View):
         schedules = Schedule.objects.filter(
             class_instacne=class_instacne,
             booked_seats__lt=F('capacity'),
-            date__gt=tomorrow
+            date__gte=tomorrow
         ).exclude(
             booking__customer=request.user.customer 
         ).order_by('start_time')
@@ -299,7 +308,8 @@ class MyBookingView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
     def get(self, request):
         customer = request.user.customer
-        bookings = Booking.objects.filter(customer=customer).order_by('schedule__date', 'schedule__start_time')
+        tomorrow = timezone.now().date() + timedelta(days=1)
+        bookings = Booking.objects.filter(customer=customer, schedule__date__gte=tomorrow).order_by('schedule__date', 'schedule__start_time')
         context = {
             "user": customer,
             "bookings": bookings

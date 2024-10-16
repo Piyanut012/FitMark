@@ -5,43 +5,31 @@
     <!-- Class Booking Section -->
     <section class="max-w-5xl mx-auto p-6">
         {% if user and user.membership %}
-            <h2 class="text-4xl font-bold text-accent mb-4">{{ user.membership.name }}</h2>
-            <h2 class="text-2xl font-bold text-accent mb-4">ยอดการจองคลาสฟรีคงเหลือ : {{ user.free_classes_remaining }} ครั้ง</h2>
-            <div class="grid auto-cols-max grid-flow-col gap-5 text-center">
-                <div class="flex flex-col">
-                  <span class="countdown font-mono text-5xl">
-                    <span style="--value:15;"></span>
-                  </span>
-                  days
+            <div class="shadow-lg rounded-lg overflow-hidden p-6 {% if user.membership.name == 'Gold Membership' %}shadow-accent{% elif user.membership.name == 'Platinum Membership' %}shadow-secondary{% endif %}">
+                <!-- Membership Title -->
+                <div class="flex items-center mb-6">
+                    <h2 class="text-4xl font-bold {% if user.membership.name == 'Gold Membership' %}text-accent{% elif user.membership.name == 'Platinum Membership' %}text-secondary{% endif %}">{{ user.membership.name }}</h2>
                 </div>
-                <div class="flex flex-col">
-                  <span class="countdown font-mono text-5xl">
-                    <span style="--value:10;"></span>
-                  </span>
-                  hours
+            
+                <!-- Free Classes Remaining -->
+                <div class="flex items-center text-2xl font-semibold text-gray-400 mb-4">
+                    ยอดการจองคลาสฟรีคงเหลือ : <span class="ml-2 text-blue-500">{{ user.free_classes_remaining }} ครั้ง</span>
                 </div>
-                <div class="flex flex-col">
-                  <span class="countdown font-mono text-5xl">
-                    <span style="--value:24;"></span>
-                  </span>
-                  min
+            
+                <!-- Membership Expiry Date -->
+                <div class="flex items-center text-2xl font-semibold text-gray-400 ">
+                    วันหมดสมาชิก : <span class="ml-2 text-red-600">{{ user.membership_expiry_date }}</span>
                 </div>
-                <div class="flex flex-col">
-                  <span class="countdown font-mono text-5xl">
-                    <span style="--value:${counter};"></span>
-                  </span>
-                  sec
-                </div>
-              </div>
+            </div>
         {% endif %}
         
-        <div class="grid md:grid-cols-3 md:gap-4 p-4">
+        <div class="grid md:grid-cols-3 md:gap-4 p-2 mt-8">
             <!--  Gold Membership Card -->
-            <div class="w-full max-w-sm p-4 bg-gray-800 border border-accent rounded-lg shadow sm:p-8">
-                <h5 class="mb-4 text-xl font-medium text-accent">{{ memberships.1.name }}</h5>
+            <div class="w-full max-w-sm p-4 bg-gray-800 border border-accent rounded-lg shadow-md shadow-accent sm:p-8">
+                <h5 class="mb-4 text-xl font-medium text-accent">{{ memberships.0.name }}</h5>
                 <div class="flex items-baseline text-white">
                     <span class="text-3xl font-semibold">฿</span>
-                    <span class="text-5xl font-extrabold tracking-tight">{{ memberships.1.price }}</span>
+                    <span class="text-5xl font-extrabold tracking-tight">{{ memberships.0.price }}</span>
                     <span class="ms-1 text-xl font-normal text-gray-400">/เดือน</span>
                 </div>
                 <ul role="list" class="space-y-5 my-7">
@@ -49,7 +37,7 @@
                         <svg class="flex-shrink-0 w-4 h-4 text-primary" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
                         </svg>
-                        <span class="text-base font-normal leading-tight text-gray-400 ms-3">10 คลาสต่อเดือน</span>
+                        <span class="text-base font-normal leading-tight text-gray-400 ms-3">{{ memberships.0.quota}} คลาสต่อเดือน</span>
                     </li>
                     <li class="flex">
                         <svg class="flex-shrink-0 w-4 h-4 text-primary" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -84,18 +72,18 @@
                     </button>
                 {% else %}
                     <!-- ถ้ายังไม่ได้สมัคร สามารถกดปุ่มสมัครได้ -->
-                    <button type="button" onclick="ConfirmMembership('{{ memberships.1.id }}', '{{ memberships.1.name }}')"
+                    <button type="button" onclick="ConfirmMembership('{{ memberships.0.id }}', '{{ memberships.0.name }}')"
                             class="text-white bg-primary bg-opacity-80 hover:bg-opacity-100 focus:ring-4 focus:outline-none focus:ring-pink-200 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center">
                         สมัคร
                     </button>
                 {% endif %}
             </div>
             <!-- Platinum Membership Card -->
-            <div class="w-full max-w-sm p-4 bg-gray-800 border border-secondary rounded-lg shadow sm:p-8">
-                <h5 class="mb-4 text-xl font-medium text-secondary">{{ memberships.0.name }}</h5>
+            <div class="w-full max-w-sm p-4 bg-gray-800 border border-secondary rounded-lg shadow-md shadow-secondary sm:p-8">
+                <h5 class="mb-4 text-xl font-medium text-secondary">{{ memberships.1.name }}</h5>
                 <div class="flex items-baseline text-white">
                     <span class="text-3xl font-semibold">฿</span>
-                    <span class="text-5xl font-extrabold tracking-tight">{{ memberships.0.price }}</span>
+                    <span class="text-5xl font-extrabold tracking-tight">{{ memberships.1.price }}</span>
                     <span class="ms-1 text-xl font-normal text-gray-400">/เดือน</span>
                 </div>
                 <ul role="list" class="space-y-5 my-7">
@@ -103,7 +91,7 @@
                         <svg class="flex-shrink-0 w-4 h-4 text-primary" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
                         </svg>
-                        <span class="text-base font-normal leading-tight text-gray-400 ms-3">20 คลาสต่อเดือน</span>
+                        <span class="text-base font-normal leading-tight text-gray-400 ms-3">{{ memberships.1.quota}} คลาสต่อเดือน</span>
                     </li>
                     <li class="flex">
                         <svg class="flex-shrink-0 w-4 h-4 text-primary" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -138,7 +126,7 @@
                     </button>
                 {% else %}
                     <!-- ถ้ายังไม่ได้สมัคร สามารถกดปุ่มสมัครได้ -->
-                    <button type="button" onclick="ConfirmMembership('{{ memberships.0.id }}', '{{ memberships.0.name }}')"
+                    <button type="button" onclick="ConfirmMembership('{{ memberships.1.id }}', '{{ memberships.1.name }}')"
                             class="text-white bg-primary bg-opacity-80 hover:bg-opacity-100 focus:ring-4 focus:outline-none focus:ring-pink-200 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center">
                         สมัคร
                     </button>
