@@ -16,6 +16,7 @@ urlpatterns = [
     path("MyBooking/", views.MyBookingView.as_view(), name="my_booking"),
     path("MyBooking/delete/<int:booking_id>/", views.MyBookingView.as_view(), name="delete_my_booking"),
     path("Memberships/", views.MembershipsView.as_view(), name="memberships"),
+    path("Memberships/confirm/<int:membership_id>/", views.GenerateQRCodeView.as_view(), name="confirm_membership"),
 
     # Trainer pages
     path("ManageClasses/", views.ManageClasses.as_view(), name="manage_classes"),

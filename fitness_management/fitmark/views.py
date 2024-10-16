@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import F
 from .models import *
 from .forms import *
+from datetime import date, timedelta
 from django.views import View
 from django.contrib.auth import login, logout
 from django.contrib.auth.models import Group
@@ -255,7 +256,7 @@ class BookClass(LoginRequiredMixin, PermissionRequiredMixin, View):
             booked_seats__lt=F('capacity'),
             date__gt=tomorrow
         ).exclude(
-            booking__customer=request.user.customer  # Exclude schedules already booked by the customer
+            booking__customer=request.user.customer 
         ).order_by('start_time')
         
         # สร้าง list ของวันที่ที่มี schedule
@@ -276,11 +277,10 @@ class BookClass(LoginRequiredMixin, PermissionRequiredMixin, View):
         schedule.booked_seats += 1
         schedule.save()
          # Create a new booking
-        booking = Booking.objects.create(
+        Booking.objects.create(
             schedule=schedule,
             customer=request.user.customer
         )
-        booking.save()
         messages.success(request, "จองคลาสสำเร็จ")
         return JsonResponse({"success": True})
 
@@ -328,21 +328,38 @@ class MembershipsView(LoginRequiredMixin, PermissionRequiredMixin, View):
         return redirect('classes_schedule')
 
     def get(self, request):
+        customer = request.user.customer
         memberships = Membership.objects.all()
-        return render(request, 'Membership.html', {"memberships": memberships})
+        context = {
+            "user": customer,
+            "memberships": memberships
+        }
+        return render(request, 'Membership.html', context)
+    
+    def post(self, request):
+        membership_id = request.POST.get('membership_id')
+        membership = get_object_or_404(Membership, id=membership_id)
+        customer = request.user.customer
+        customer.membership = membership
+        customer.membership_expiry_date = date.today() + timedelta(days=30) 
+        customer.free_classes_remaining = membership.quota
+        customer.save()
+        messages.success(request, "ยืนยันการสมัครสมาชิกสำเร็จ")
+        return redirect('memberships')
 
 class GenerateQRCodeView(View):
     def get(self, request, membership_id):
+        print(membership_id)
         membership = get_object_or_404(Membership, id=membership_id)
         
         # สร้างข้อมูลสำหรับ QR code
-        qr_data = f"สมัครสมาชิก {membership.name} ราคา {membership.price} บาท"
+        qr_data = f"ชำระค่าสมัครสมาชิก {membership.name} ราคา {membership.price} บาทเรียบร้อยแล้ว"
         
         # สร้าง QR code
         qr = qrcode.QRCode(
             version=1,
             error_correction=qrcode.constants.ERROR_CORRECT_L,
-            box_size=10,
+            box_size=6,
             border=4,
         )
         qr.add_data(qr_data)

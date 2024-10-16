@@ -4,94 +4,200 @@
 {% block content %}
     <!-- Class Booking Section -->
     <section class="max-w-5xl mx-auto p-6">
-        <h2 class="text-4xl font-bold text-accent mb-4">สมาชิก</h2>
+        {% if user and user.membership %}
+            <h2 class="text-4xl font-bold text-accent mb-4">{{ user.membership.name }}</h2>
+            <h2 class="text-2xl font-bold text-accent mb-4">ยอดการจองคลาสฟรีคงเหลือ : {{ user.free_classes_remaining }} ครั้ง</h2>
+            <div class="grid auto-cols-max grid-flow-col gap-5 text-center">
+                <div class="flex flex-col">
+                  <span class="countdown font-mono text-5xl">
+                    <span style="--value:15;"></span>
+                  </span>
+                  days
+                </div>
+                <div class="flex flex-col">
+                  <span class="countdown font-mono text-5xl">
+                    <span style="--value:10;"></span>
+                  </span>
+                  hours
+                </div>
+                <div class="flex flex-col">
+                  <span class="countdown font-mono text-5xl">
+                    <span style="--value:24;"></span>
+                  </span>
+                  min
+                </div>
+                <div class="flex flex-col">
+                  <span class="countdown font-mono text-5xl">
+                    <span style="--value:${counter};"></span>
+                  </span>
+                  sec
+                </div>
+              </div>
+        {% endif %}
         
-        <div class="grid md:grid-cols-3 md:gap-4">
+        <div class="grid md:grid-cols-3 md:gap-4 p-4">
             <!--  Gold Membership Card -->
-            <div class="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-                <h5 class="mb-4 text-xl font-medium text-gray-500 dark:text-gray-400">Gold Membership</h5>
-                <div class="flex items-baseline text-gray-900 dark:text-white">
+            <div class="w-full max-w-sm p-4 bg-gray-800 border border-accent rounded-lg shadow sm:p-8">
+                <h5 class="mb-4 text-xl font-medium text-accent">{{ memberships.1.name }}</h5>
+                <div class="flex items-baseline text-white">
                     <span class="text-3xl font-semibold">฿</span>
-                    <span class="text-5xl font-extrabold tracking-tight">1499</span>
-                    <span class="ms-1 text-xl font-normal text-gray-500 dark:text-gray-400">/เดือน</span>
+                    <span class="text-5xl font-extrabold tracking-tight">{{ memberships.1.price }}</span>
+                    <span class="ms-1 text-xl font-normal text-gray-400">/เดือน</span>
                 </div>
                 <ul role="list" class="space-y-5 my-7">
                     <li class="flex items-center">
-                        <svg class="flex-shrink-0 w-4 h-4 text-blue-700 dark:text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <svg class="flex-shrink-0 w-4 h-4 text-primary" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
                         </svg>
-                        <span class="text-base font-normal leading-tight text-gray-500 dark:text-gray-400 ms-3">10 คลาสต่อเดือน</span>
+                        <span class="text-base font-normal leading-tight text-gray-400 ms-3">10 คลาสต่อเดือน</span>
                     </li>
                     <li class="flex">
-                        <svg class="flex-shrink-0 w-4 h-4 text-blue-700 dark:text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <svg class="flex-shrink-0 w-4 h-4 text-primary" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
                         </svg>
-                        <span class="text-base font-normal leading-tight text-gray-500 dark:text-gray-400 ms-3">มีห้องล็อกเกอร์</span>
+                        <span class="text-base font-normal leading-tight text-gray-400 ms-3">มีห้องล็อกเกอร์</span>
                     </li>
                     <li class="flex">
-                        <svg class="flex-shrink-0 w-4 h-4 text-blue-700 dark:text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <svg class="flex-shrink-0 w-4 h-4 text-primary" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
                         </svg>
-                        <span class="text-base font-normal leading-tight text-gray-500 dark:text-gray-400 ms-3">ประเมินสมรรถภาพร่างกาย</span>
+                        <span class="text-base font-normal leading-tight text-gray-400 ms-3">ประเมินสมรรถภาพร่างกาย</span>
                     </li>
                     <li class="flex line-through decoration-gray-500">
-                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400 dark:text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <svg class="flex-shrink-0 w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
                         </svg>
                         <span class="text-base font-normal leading-tight text-gray-500 ms-3">ปรึกษาเทรนเนอร์ส่วนตัว</span>
                     </li>
                     <li class="flex line-through decoration-gray-500">
-                        <svg class="flex-shrink-0 w-4 h-4 text-gray-400 dark:text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <svg class="flex-shrink-0 w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
                         </svg>
                         <span class="text-base font-normal leading-tight text-gray-500 ms-3">แผนอาหารส่วนบุคคลพร้อมนักโภชนาการ</span>
                     </li>
                 </ul>
-                <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-200 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center">Choose plan</button>
+                {% if user and user.membership %}
+                    <!-- ถ้าสมัครสมาชิกแล้ว ปิดการใช้งานปุ่ม -->
+                    <button type="button" disabled
+                            class="text-white bg-gray-400 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center">
+                        คุณได้สมัครสมาชิกแล้ว
+                    </button>
+                {% else %}
+                    <!-- ถ้ายังไม่ได้สมัคร สามารถกดปุ่มสมัครได้ -->
+                    <button type="button" onclick="ConfirmMembership('{{ memberships.1.id }}', '{{ memberships.1.name }}')"
+                            class="text-white bg-primary bg-opacity-80 hover:bg-opacity-100 focus:ring-4 focus:outline-none focus:ring-pink-200 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center">
+                        สมัคร
+                    </button>
+                {% endif %}
             </div>
-            <!--  Gold Membership Card -->
-            <div class="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-                <h5 class="mb-4 text-xl font-medium text-gray-500 dark:text-gray-400">Platinum Membership</h5>
-                <div class="flex items-baseline text-gray-900 dark:text-white">
+            <!-- Platinum Membership Card -->
+            <div class="w-full max-w-sm p-4 bg-gray-800 border border-secondary rounded-lg shadow sm:p-8">
+                <h5 class="mb-4 text-xl font-medium text-secondary">{{ memberships.0.name }}</h5>
+                <div class="flex items-baseline text-white">
                     <span class="text-3xl font-semibold">฿</span>
-                    <span class="text-5xl font-extrabold tracking-tight">2499</span>
-                    <span class="ms-1 text-xl font-normal text-gray-500 dark:text-gray-400">/เดือน</span>
+                    <span class="text-5xl font-extrabold tracking-tight">{{ memberships.0.price }}</span>
+                    <span class="ms-1 text-xl font-normal text-gray-400">/เดือน</span>
                 </div>
                 <ul role="list" class="space-y-5 my-7">
                     <li class="flex items-center">
-                        <svg class="flex-shrink-0 w-4 h-4 text-blue-700 dark:text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <svg class="flex-shrink-0 w-4 h-4 text-primary" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
                         </svg>
-                        <span class="text-base font-normal leading-tight text-gray-500 dark:text-gray-400 ms-3">20 คลาสต่อเดือน</span>
+                        <span class="text-base font-normal leading-tight text-gray-400 ms-3">20 คลาสต่อเดือน</span>
                     </li>
                     <li class="flex">
-                        <svg class="flex-shrink-0 w-4 h-4 text-blue-700 dark:text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <svg class="flex-shrink-0 w-4 h-4 text-primary" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
                         </svg>
-                        <span class="text-base font-normal leading-tight text-gray-500 dark:text-gray-400 ms-3">มีห้องล็อกเกอร์</span>
+                        <span class="text-base font-normal leading-tight text-gray-400 ms-3">มีห้องล็อกเกอร์</span>
                     </li>
                     <li class="flex">
-                        <svg class="flex-shrink-0 w-4 h-4 text-blue-700 dark:text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <svg class="flex-shrink-0 w-4 h-4 text-primary" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
                         </svg>
-                        <span class="text-base font-normal leading-tight text-gray-500 dark:text-gray-400 ms-3">ประเมินสมรรถภาพร่างกาย</span>
+                        <span class="text-base font-normal leading-tight text-gray-400 ms-3">ประเมินสมรรถภาพร่างกาย</span>
                     </li>
                     <li class="flex">
-                        <svg class="flex-shrink-0 w-4 h-4 text-blue-700 dark:text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <svg class="flex-shrink-0 w-4 h-4 text-primary" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
                         </svg>
-                        <span class="text-base font-normal leading-tight text-gray-500 dark:text-gray-400 ms-3">ปรึกษาเทรนเนอร์ส่วนตัว</span>
+                        <span class="text-base font-normal leading-tight text-gray-400 ms-3">ปรึกษาเทรนเนอร์ส่วนตัว</span>
                     </li>
                     <li class="flex">
-                        <svg class="flex-shrink-0 w-4 h-4 text-blue-700 dark:text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <svg class="flex-shrink-0 w-4 h-4 text-primary" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
                         </svg>
-                        <span class="text-base font-normal leading-tight text-gray-500 dark:text-gray-400 ms-3">แผนอาหารส่วนบุคคลพร้อมนักโภชนาการ</span>
+                        <span class="text-base font-normal leading-tight text-gray-400 ms-3">แผนอาหารส่วนบุคคลพร้อมนักโภชนาการ</span>
                     </li>
                 </ul>
-                <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-200 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center">Choose plan</button>
+                {% if user.membership %}
+                    <!-- ถ้าสมัครสมาชิกแล้ว ปิดการใช้งานปุ่ม -->
+                    <button type="button" disabled
+                            class="text-white bg-gray-400 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center">
+                        คุณได้สมัครสมาชิกแล้ว
+                    </button>
+                {% else %}
+                    <!-- ถ้ายังไม่ได้สมัคร สามารถกดปุ่มสมัครได้ -->
+                    <button type="button" onclick="ConfirmMembership('{{ memberships.0.id }}', '{{ memberships.0.name }}')"
+                            class="text-white bg-primary bg-opacity-80 hover:bg-opacity-100 focus:ring-4 focus:outline-none focus:ring-pink-200 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center">
+                        สมัคร
+                    </button>
+                {% endif %}
             </div>
         </div>
     </section>
 
+    <!-- Confirm Membership Modal -->
+    <dialog id="confirm_modal" class="modal">
+        <div class="modal-box bg-gray-800 w-full max-w-xl">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+
+            <!-- Select datetime -->
+            <div class="p-2 border-b-2 border-secondary mt-3">
+                <span id="membership_name" class="text-2xl"></span>
+            </div>
+            
+            <form action="{% url 'memberships' %}" method="POST">
+            {% csrf_token %}
+            
+            <input type="hidden" id="membership_id" name="membership_id" value=""/>
+
+            <div class="flex justify-center p-3">
+                <img id="QRCode" alt="QR Code สำหรับการชำระเงิน">
+            </div>
+            
+            <!-- Comfirm up button -->
+            <div class="flex mt-2 gap-2">
+            <button type="submit"
+                class="w-1/4 bg-green-400 text-white text-xl font-bold py-2 rounded-lg hover:bg-green-500 focus:outline-none transition-colors duration-300 ml-auto">
+                ยืนยัน
+            </button>
+            </form>
+            <a onclick="document.getElementById('confirm_modal').close()"
+                class="btn w-1/4 bg-red-400 text-white text-xl font-bold py-2 rounded-lg hover:bg-red-500 focus:outline-none transition-colors duration-300">
+                ยกเลิก
+            </a>
+            </div>
+        </div>
+    </dialog>
+
+
+{% endblock %}
+{% block script %}
+    <script>
+        function ConfirmMembership(membership_id, membership_name) {
+            const confirm_modal = document.getElementById('confirm_modal');
+            const membership_nameE = document.getElementById('membership_name');
+            const membership_id_input = document.getElementById('membership_id');
+            const QRCode = document.getElementById('QRCode');
+
+            membership_id_input.value = membership_id;
+            membership_nameE.innerText = `ชำระเงินการสมัคร ${membership_name}`;
+            QRCode.src = `confirm/${membership_id}`;
+
+            confirm_modal.showModal();
+        }
+    </script>
 {% endblock %}
