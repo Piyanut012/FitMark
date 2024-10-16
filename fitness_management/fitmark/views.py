@@ -282,6 +282,11 @@ class BookClass(LoginRequiredMixin, PermissionRequiredMixin, View):
     
     def post(self, request):
         schedule_id = request.POST.get('schedule_id')
+
+        # ตรวจสอบว่า schedule_id ถูกส่งมาไหม
+        if not schedule_id:
+            return JsonResponse({"success": False, "message": "กรุณาเลือกช่วงเวลาที่ต้องการจอง"})
+        
         schedule = get_object_or_404(Schedule, id=schedule_id)
         schedule.booked_seats += 1
         schedule.save()

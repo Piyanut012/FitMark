@@ -93,6 +93,7 @@
                     <div class="flex justify-between items-center">
                         <h4 id="date_detail" class=" text-white mb-2"></h4>
                     </div>
+                    <span id="date_error" class="text-red-500"></span>
                     <div id="schedule-list" class="space-y-2 mt-3">
     
                     </div>
@@ -202,6 +203,8 @@
         .then(data => {
             if (data.success) {
                 closeScheduleModal();
+            }else {
+                document.getElementById('date_error').textContent = data.message;
             }
         })
         .catch(error => console.error('Error:', error));
